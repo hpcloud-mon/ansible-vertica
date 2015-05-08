@@ -1,0 +1,10 @@
+---
+# Define cluster configuration or alternative standalone config
+
+# From a template create {{vertica_config_dir}}/admintools.conf dbadmin_user/dbadmin_group mode 660 - this template still needs a lot of work
+
+# For a cluster
+# Add host files entries for each node in the cluster
+
+# In the chef cookbook we supported configuration of a secondary NIC dedicated to cluster communication. A good idea but not needed for our
+# initial role, so perhaps this section could be collapsed into another task file.

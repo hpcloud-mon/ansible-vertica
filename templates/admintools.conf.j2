@@ -1,0 +1,15 @@
+[Configuration]
+install_opts = ['-Y', '-T', '-s', '<%= @ips.join(',') %>', '-r', '/tmp/vertica_7.0.0-1_amd64.deb', '-d', '/var/vertica/data']
+default_base = /home/dbadmin
+show_hostnames = False
+format = 3
+last_port = 5433
+
+[Cluster]
+hosts = <%= @ips.join(',') %>
+spread_hosts = 
+
+[Nodes]
+<% @ips.each_index do |index| -%>
+node000<%= index + 1 %> = <%= @ips[index] %>,<%= @catalog_dir %>,<%= @data_dir %>
+<% end -%>

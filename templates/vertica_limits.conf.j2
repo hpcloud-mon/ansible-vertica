@@ -1,0 +1,7 @@
+root    -       nofile  65536
+*       -       nofile  65536
+root    -       fsize   unlimited
+*       -       fsize   unlimited
+root    -       nproc   {{ ansible_memtotal_mb }}
+*       -       nproc   {{ ansible_memtotal_mb }}
+dbadmin -       nice    0

@@ -1,0 +1,5 @@
+---
+- name: restart verticad
+  service: name=verticad state=restarted
+- name: restart vertica_agent
+  service: name=vertica_agent state=restarted

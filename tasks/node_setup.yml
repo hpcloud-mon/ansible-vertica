@@ -1,0 +1,19 @@
+---
+# Create vertica_data_dir and vertica_catalog_dir mode 770 dbadmin_user/dbadmin_group
+
+# Create vertica_config_dir mode 775 dbadmin_user/dbadmin_group also the subdirs share and /opt/vertica/log
+
+# Link to init scripts
+#  "/etc/init.d/vertica_agent" => "/opt/vertica/sbin/vertica_agent",
+#    "/etc/init.d/verticad" => "/opt/vertica/sbin/verticad"
+
+# For EULA acceptance create the file {{vertica_config_dir}}/d5415f948449e9d4c421b568f2411140.dat dbadmin_user/dbadmin_group mode 775
+
+# Add the license key to {{vertica_config_dir}}/share/license.key - there is a community edition one in the cookbook at https://github.com/tkuhlman/cookbooks-vertica/blob/master/files/default/community_license.key
+# Use the community one unless another is specified in vertica_license
+
+# Vertica uses a self signed internal ssl key/cert for cluster communication. For a secure setup these should be provided otherwise insecure defaults
+# can be used.
+# todo insecure defaults can be pulled from the chef cookbook.
+# todo I have not explained or defined optional variables for these in the Readme yet
+# The ssl certs go into {{vertica_config_dir}}/share as the files agent.key agent.cert agent.pem with all being dbadmin_user/dbadmin_group mode 400

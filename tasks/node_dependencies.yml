@@ -1,0 +1,19 @@
+---
+# The Vertica deb doesn't do a good job at listing its dependencies so do it manually
+- name: Install Vertica dependencies
+  apt: name="{{item}}" state=present
+  with_items: "{{vertica_dependencies}}"
+
+- name: Setup User limits for the db
+  template: dest=/etc/security/limits.d/vertica.conf owner=root group=root mode=644 src=vertica_limits.conf.j2
+
+- name: Apply security limits to su sessions, admintools needs this as it uses su
+  lineinfile: dest=/etc/pam.d/su regexp="^#\ssession\srequired\spam_limits.so" line="session    required   pam_limits.so"
+
+- name: Set the LANG variable
+  copy:
+    dest: /etc/profile.d/vertica_node.sh
+    content: "export LANG='en_US.UTF-8'\nexport LC_ALL='en_US.UTF-8'\nexport R_HOME=/opt/vertica/R\n"
+    owner: root
+    group: root
+    mode: 644
