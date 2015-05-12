@@ -2,15 +2,30 @@
 # It is important that the dbadmin users on each node in a cluster can have passwordless ssh access to the other machines
 # This is done with a shared private ssh key
 
-# todo first create the dbadmin user and the dbadmin_group
+- name: Create dbadmin group
+  group: name="{{vertica_dbadmin_group}}" state=present
 
-# todo challenges are doing a shared private key that is secure, we can generate one and put it in a variable. Subsequent machines
-# will check the variable and their setup. On the next run the first machine will see it has one set and put it into the variable.
-# to generate a command such as "ssh-keygen -t rsa -b 2048 -f {{vertica_dbadmin_home}}/.ssh/id_rsa -q -N ''"
-# Add the public key to .ssh/authorized_keys
+- name: Create dbadmin user
+  user: name="{{vertica_dbadmin_user}}" home="{{vertica_dbadmin_home}}" group="{{vertica_dbadmin_group}}"
 
-# todo create ~dbadmin/.ssh as the dbadmin user/group mode 700
-# Add in a .ssh/config with content="StrictHostKeyChecking no"
+- name: Create ssh directory in vertica home directory
+  file: path="{{vertica_dbadmin_home}}"/.ssh owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0700 state=directory
 
-# todo create /opt/vertica/config/users/{{vertica_dbadmin_user}} mode 775 group set to root, user to dbadmin
-# Create empty file agent.conf to the above dir with mode 664 user/group both root
+- name: Create config for ssh 
+  copy: dest={{vertica_dbadmin_home}}/.ssh/config owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0600 content="StrictHostKeyChecking no" force=no
+
+- name: Create id_rsa
+  copy: dest={{vertica_dbadmin_home}}/.ssh/id_rsa owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0600 content="{{ssh_private_key.content| b64decode}}" force=no
+
+- name: Create id_rsa.pub
+  copy: dest={{vertica_dbadmin_home}}/.ssh/id_rsa.pub owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0600 content="{{ssh_public_key.content| b64decode}}" force=no
+
+- name: Add public key to authorized keys
+  authorized_key: user="{{vertica_dbadmin_user}}" key="{{ssh_public_key.content| b64decode}}"
+
+- name: Create user directory under vertica for dbadmin
+  file: path=/opt/vertica/config/users/"{{vertica_dbadmin_user}}" owner="{{vertica_dbadmin_user}}" group=root mode=0775 state=directory
+
+- name: Create agent.conf
+  file: path=/opt/vertica/config/users/"{{vertica_dbadmin_user}}"/agent.conf owner=root group=root mode=0644 state=touch
+

@@ -1,5 +1,5 @@
 #Vertica
-Installs Vertica [Vertica](http://www.vertica.com/) either standalone or part of a cluster.
+Installs [Vertica](http://www.vertica.com/) either standalone or part of a cluster.
 
 Tested with Vertica 7.x
 

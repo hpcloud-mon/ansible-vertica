@@ -1,8 +1,18 @@
 ---
-# Create vertica_data_dir and vertica_catalog_dir mode 770 dbadmin_user/dbadmin_group
+- name: Create catalog and data directory
+  file: path={{item}} owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0770 state=directory
+  with_items:
+    - "{{vertica_catalog_dir}}"
+    - "{{vertica_data_dir}}"
 
+#is this correct
 # Create vertica_config_dir mode 775 dbadmin_user/dbadmin_group also the subdirs share and /opt/vertica/log
-
+- name: Create vertica_config_dir, share, and log directories
+  file: path={{item}} owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0775 state=directory
+  with_items:
+    - "{{vertica_config_dir}}"
+    - /opt/vertica/config/share
+    - /opt/vertica/log
 # Link to init scripts
 #  "/etc/init.d/vertica_agent" => "/opt/vertica/sbin/vertica_agent",
 #    "/etc/init.d/verticad" => "/opt/vertica/sbin/verticad"

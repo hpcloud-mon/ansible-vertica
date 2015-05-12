@@ -5,3 +5,6 @@ vertica_data_dir: /var/vertica/data
 vertica_packages:
   - vertica
   - vertica_r_lang
+vertica_package_locations:
+  - /vagrant/vertica/vertica_7.1.1-0_amd64.deb
+  - /vagrant/vertica/vertica-r-lang_7.1.1-0_amd64.deb
