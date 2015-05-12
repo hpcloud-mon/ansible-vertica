@@ -1,7 +1,12 @@
 ---
 # Define cluster configuration or alternative standalone config
+- name: Set Vertica IPs for cluster deployment
+  set_fact: vertica_ips={{vertica_cluster}}
+  when: vertica_cluster is defined
 
 # From a template create {{vertica_config_dir}}/admintools.conf dbadmin_user/dbadmin_group mode 660 - this template still needs a lot of work
+- name: Create admintools config file
+  template: src=admintools.conf.j2 dest={{vertica_config_dir}}/admintools.conf owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=660
 
 # For a cluster
 # Add host files entries for each node in the cluster
