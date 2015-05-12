@@ -10,7 +10,7 @@
 - include: node_users.yml
 - include: node_setup.yml
 
-# - include: cluster.yml
+- include: cluster.yml
 
 
 # A DB must exist before the node can startup.

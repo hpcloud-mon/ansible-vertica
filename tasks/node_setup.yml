@@ -1,29 +1,71 @@
 ---
 - name: Create catalog and data directory
-  file: path={{item}} owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0770 state=directory
+  file: path={{item}} owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=770 state=directory
   with_items:
     - "{{vertica_catalog_dir}}"
     - "{{vertica_data_dir}}"
 
-#is this correct
-# Create vertica_config_dir mode 775 dbadmin_user/dbadmin_group also the subdirs share and /opt/vertica/log
 - name: Create vertica_config_dir, share, and log directories
-  file: path={{item}} owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0775 state=directory
+  file: path={{item}} owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=775 state=directory
   with_items:
     - "{{vertica_config_dir}}"
     - /opt/vertica/config/share
     - /opt/vertica/log
-# Link to init scripts
-#  "/etc/init.d/vertica_agent" => "/opt/vertica/sbin/vertica_agent",
-#    "/etc/init.d/verticad" => "/opt/vertica/sbin/verticad"
 
-# For EULA acceptance create the file {{vertica_config_dir}}/d5415f948449e9d4c421b568f2411140.dat dbadmin_user/dbadmin_group mode 775
+- name: Add links for init.d scripts
+  file: src={{ item.src }} dest={{ item.dest}} state=link
+  with_items:
+    - { dest: '/etc/init.d/vertica_agent', src: '/opt/vertica/sbin/vertica_agent' }
+    - { dest: '/etc/init.d/verticad', src: '/opt/vertica/sbin/verticad' }
 
-# Add the license key to {{vertica_config_dir}}/share/license.key - there is a community edition one in the cookbook at https://github.com/tkuhlman/cookbooks-vertica/blob/master/files/default/community_license.key
-# Use the community one unless another is specified in vertica_license
+- name: Create file for EULA acceptance
+  copy: src=d5415f948449e9d4c421b568f2411140.dat dest={{vertica_config_dir}}/d5415f948449e9d4c421b568f2411140.dat owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=775
 
-# Vertica uses a self signed internal ssl key/cert for cluster communication. For a secure setup these should be provided otherwise insecure defaults
-# can be used.
-# todo insecure defaults can be pulled from the chef cookbook.
-# todo I have not explained or defined optional variables for these in the Readme yet
-# The ssl certs go into {{vertica_config_dir}}/share as the files agent.key agent.cert agent.pem with all being dbadmin_user/dbadmin_group mode 400
+- name: Place community license key
+  copy: src=community_license.key dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
+  when: vertica_license_key is not defined
+
+- name: Place license key
+  copy: content={{vertica_license_key}} dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
+  when: vertica_license_key is defined
+
+- name: Check status of agent ssl file
+  stat: path={{vertica_config_dir}}/share/agent.key
+  register: status
+  when: vertica_agent_key is not defined
+
+- name: Generate agent ssl key
+  shell: chdir={{vertica_config_dir}}/share {{ item }}
+  with_items:
+  - openssl genrsa 1024 > agent.key
+  - openssl req -new -x509 -nodes -sha1 -days 36500  -key agent.key -subj '/C=US/ST=Massachusetts/L=Billerica/CN=www.vertica.com' > agent.cert
+  - cat agent.cert agent.key > agent.pem
+  when: not status.stat.exists and vertica_agent_key is not defined
+
+- name: Read in agent key
+  slurp: src={{vertica_config_dir}}/share/agent.key
+  register: agent_key_info
+  when: vertica_agent_key is not defined
+
+- name: Read in agent cert
+  slurp: src={{vertica_config_dir}}/share/agent.cert
+  register: agent_cert_info
+  when: vertica_agent_cert is not defined
+
+- name: Read in agent pem
+  slurp: src={{vertica_config_dir}}/share/agent.pem
+  register: agent_pem_info
+  when: vertica_agent_pem is not defined
+
+- name: Set agent ssl variables
+  set_fact: vertica_agent_key="{{agent_key_info.content | b64decode}}" vertica_agent_cert="{{agent_cert_info.content | b64decode}}" vertica_agent_pem="{{agent_pem_info.content | b64decode}}"
+  when: vertica_agent_key is not defined
+
+- name: Create agent key 
+  copy: dest={{vertica_config_dir}}/share/agent.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_agent_key}}"
+
+- name: Create agent cert
+  copy: dest={{vertica_config_dir}}/share/agent.cert owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_agent_cert}}"
+
+- name: Create agent pem
+  copy: dest={{vertica_config_dir}}/share/agent.pem owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_agent_pem}}"
