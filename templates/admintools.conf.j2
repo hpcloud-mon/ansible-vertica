@@ -1,9 +1,11 @@
 [Configuration]
 default_base = /home/dbadmin
-install_opts = -Y -T -s {{vertica_ips}} -r /tmp/vertica_7.0.0-1_amd64.deb -d /var/vertica/data
+install_opts = -Y -T -s {{vertica_ips}} -r {{vertica_package_location}} -d /var/vertica/data
 show_hostnames = False
 format = 3
 last_port = 5433
+controlsubnet = default
+controlmode = pt2pt
 
 [Cluster]
 hosts = {{vertica_ips}}

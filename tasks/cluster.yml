@@ -1,15 +1,22 @@
 ---
-# Define cluster configuration or alternative standalone config
 - name: Set Vertica IPs for cluster deployment
   set_fact: vertica_ips={{vertica_cluster}}
   when: vertica_cluster is defined
 
-# From a template create {{vertica_config_dir}}/admintools.conf dbadmin_user/dbadmin_group mode 660 - this template still needs a lot of work
+- name: Check status of admintools config file
+  stat: path={{vertica_config_dir}}/admintools.conf
+  register: admin_tools_status
+
 - name: Create admintools config file
   template: src=admintools.conf.j2 dest={{vertica_config_dir}}/admintools.conf owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=660
+  when: not admin_tools_status.stat.exists
 
-# For a cluster
-# Add host files entries for each node in the cluster
+# TODO test in cluster
+- name: "Build hosts file"
+  lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}}" state=present
+  when: vertica_cluster is defined
+  with_items: groups['all']
+
 
 # In the chef cookbook we supported configuration of a secondary NIC dedicated to cluster communication. A good idea but not needed for our
 # initial role, so perhaps this section could be collapsed into another task file.

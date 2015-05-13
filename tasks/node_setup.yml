@@ -37,9 +37,9 @@
 - name: Generate agent ssl key
   shell: chdir={{vertica_config_dir}}/share {{ item }}
   with_items:
-  - openssl genrsa 1024 > agent.key
-  - openssl req -new -x509 -nodes -sha1 -days 36500  -key agent.key -subj '/C=US/ST=Massachusetts/L=Billerica/CN=www.vertica.com' > agent.cert
-  - cat agent.cert agent.key > agent.pem
+    - openssl genrsa 1024 > agent.key
+    - openssl req -new -x509 -nodes -sha1 -days 36500  -key agent.key -subj '/C=US/ST=Massachusetts/L=Billerica/CN=www.vertica.com' > agent.cert
+    - cat agent.cert agent.key > agent.pem
   when: not status.stat.exists and vertica_agent_key is not defined
 
 - name: Read in agent key
@@ -69,3 +69,19 @@
 
 - name: Create agent pem
   copy: dest={{vertica_config_dir}}/share/agent.pem owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_agent_pem}}"
+
+- name: Using insecure default database ssl key
+  copy: src=default_server.key dest=/var/vertica/server.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 force=no
+  when: vertica_server_key is not defined
+
+- name: Using insecure default database ssl crt
+  copy: src=default_server.crt dest={{vertica_catalog_dir}}/../server.crt owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=444 force=no
+  when: vertica_server_crt is not defined
+
+- name: Create server key from variable
+  copy: dest={{vertica_catalog_dir}}/../server.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_server_key}}" force=no
+  when: vertica_server_key is defined
+
+- name: Create server crt from variable
+  copy: dest={{vertica_catalog_dir}}/../server.crt owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=444 content="{{vertica_server_crt}}" force=no
+  when: vertica_server_crt is defined

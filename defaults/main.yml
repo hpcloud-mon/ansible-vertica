@@ -2,10 +2,5 @@
 vertica_catalog_dir: /var/vertica/catalog
 vertica_data_dir: /var/vertica/data
 vertica_ips: 127.0.0.1
-# By default install R extensions
-vertica_packages:
-  - vertica
-  - vertica_r_lang
-vertica_package_locations:
-  - /vagrant/vertica/vertica_7.1.1-0_amd64.deb
-  - /vagrant/vertica/vertica-r-lang_7.1.1-0_amd64.deb
+vertica_package_location: /vagrant/vertica/vertica_7.1.1-0_amd64.deb
+env: {LC_ALL: en_US.UTF-8, R_HOME: /opt/vertica/R}

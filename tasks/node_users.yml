@@ -6,7 +6,7 @@
   group: name="{{vertica_dbadmin_group}}" state=present
 
 - name: Create dbadmin user
-  user: name="{{vertica_dbadmin_user}}" home="{{vertica_dbadmin_home}}" group="{{vertica_dbadmin_group}}"
+  user: name="{{vertica_dbadmin_user}}" home="{{vertica_dbadmin_home}}" group="{{vertica_dbadmin_group}}" shell=/bin/bash
 
 - name: Create ssh directory in vertica home directory
   file: path="{{vertica_dbadmin_home}}"/.ssh owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0700 state=directory

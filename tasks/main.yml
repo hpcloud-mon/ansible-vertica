@@ -3,22 +3,19 @@
 
 # This assumes that the packages are not available and the packages are downloaded already
 - name: Install Vertica
-  apt:  deb="{{item.1}}" state=present
+  apt:  deb="{{vertica_package_location}}" state=present
   sudo: true
-  with_indexed_items: "{{vertica_package_locations}}"
 
 - include: node_users.yml
 - include: node_setup.yml
 
 - include: cluster.yml
 
-
-# A DB must exist before the node can startup.
-# - include: create_db.yml
+- include: create_db.yml
 
 # - meta: flush_handlers
 
-# - name: Start vertica
-#   service: name=verticad state=started enabled=yes
-# - name: Start vertica_agent
-#   service: name=vertica_agent state=started enabled=yes
+- name: Start vertica
+  service: name=verticad state=started enabled=yes
+- name: Start vertica_agent
+  service: name=vertica_agent state=started enabled=yes
