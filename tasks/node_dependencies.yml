@@ -8,7 +8,7 @@
   template: dest=/etc/security/limits.d/vertica.conf owner=root group=root mode=644 src=vertica_limits.conf.j2
 
 - name: Apply security limits to su sessions, admintools needs this as it uses su
-  lineinfile: dest=/etc/pam.d/su regexp="^#\ssession\srequired\spam_limits.so" line="session    required   pam_limits.so"
+  lineinfile: dest=/etc/pam.d/su regexp="^#\ssession    required   pam_limits.so" line="session    required   pam_limits.so" backrefs=yes
 
 - name: Set the LANG variable
   copy:

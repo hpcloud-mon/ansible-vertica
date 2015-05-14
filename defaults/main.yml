@@ -1,7 +1,5 @@
 ---
 vertica_catalog_dir: /var/vertica/catalog
 vertica_data_dir: /var/vertica/data
-# By default install R extensions
-vertica_packages:
-  - vertica
-  - vertica_r_lang
+vertica_ips: 127.0.0.1
+env: {LC_ALL: en_US.UTF-8, R_HOME: /opt/vertica/R}
