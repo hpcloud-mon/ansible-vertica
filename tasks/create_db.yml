@@ -6,7 +6,7 @@
   register: create_database
 
 - name: Create database 
-  command: /opt/vertica/bin/admintools -t create_db -s {{vertica_ips}} -d mon -p password
+  command: /opt/vertica/bin/admintools -t create_db -s {{vertica_ips}} -d mon -p {{vertica_dbadmin_password}}
   sudo_user: dbadmin
   environment: "{{env}}"
   when: create_database|failed
@@ -28,6 +28,6 @@
   command: "{{ item }}"
   sudo_user: dbadmin
   with_items:
-    - /opt/vertica/bin/admintools -t stop_db -F -p password -d mon
-    - /opt/vertica/bin/admintools -t start_db -p password -d mon
+    - /opt/vertica/bin/admintools -t stop_db -F -p {{vertica_dbadmin_password}} -d mon
+    - /opt/vertica/bin/admintools -t start_db -p {{vertica_dbadmin_password}} -d mon
   when: not ssl_link_status.stat.exists
