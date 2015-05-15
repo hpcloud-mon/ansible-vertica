@@ -1,6 +1,30 @@
 ---
-# For ssl there should be a server key and server cert for the database. The key/cert files should go on all nodes. I have put them in parent dir of the
-# catalog_dir owned dbadmin_user/dbadmin_group with the key being mode 400 cert mode 444
+- name: Check if database exists 
+  command: /opt/vertica/bin/admintools -t list_db -d mon
+  sudo_user: dbadmin
+  ignore_errors: yes
+  register: create_database
 
-# In chef neither the db creation nor schema was setup in the cookbook, in Ansible I think we could create the db and start the service and let the
-# schema be defined later. I need to pull the details from some old code.
+- name: Create database 
+  command: su dbadmin -c '/opt/vertica/bin/admintools -t create_db -s {{vertica_ips}} -d mon -p {{vertica_dbadmin_password}}'
+  environment: "{{env}}"
+  when: create_database|failed
+
+- name: Set restart policy
+  command: /opt/vertica/bin/admintools -t set_restart_policy -d mon -p always 
+  sudo_user: dbadmin
+  environment: "{{env}}"
+
+- name: Check if ssl links exists
+  stat: path={{vertica_catalog_dir}}/mon/v_mon_node0001_catalog/server.key
+  register: ssl_link_status
+
+- name: Create Links
+  shell: ln /var/vertica/server* /var/vertica/catalog/mon/v*/
+  when: not ssl_link_status.stat.exists
+
+- name: Restart the db is the links were created
+  command: su dbadmin -c "{{ item }}"
+  with_items:
+    - /opt/vertica/bin/admintools -t stop_db -F -p {{vertica_dbadmin_password}} -d mon
+    - /opt/vertica/bin/admintools -t start_db -p {{vertica_dbadmin_password}} -d mon
