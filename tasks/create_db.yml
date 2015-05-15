@@ -28,3 +28,4 @@
   with_items:
     - /opt/vertica/bin/admintools -t stop_db -F -p {{vertica_dbadmin_password}} -d mon
     - /opt/vertica/bin/admintools -t start_db -p {{vertica_dbadmin_password}} -d mon
+  when: not ssl_link_status.stat.exists
