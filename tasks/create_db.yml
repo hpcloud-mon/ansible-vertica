@@ -7,13 +7,13 @@
 
 - name: Create database 
   command: su dbadmin -c '/opt/vertica/bin/admintools -t create_db -s {{vertica_ips}} -d mon -p {{vertica_dbadmin_password}}'
-  environment: "{{env}}"
+  environment: "{{vertica_env}}"
   when: create_database|failed
 
 - name: Set restart policy
   command: /opt/vertica/bin/admintools -t set_restart_policy -d mon -p always 
   sudo_user: dbadmin
-  environment: "{{env}}"
+  environment: "{{vertica_env}}"
 
 - name: Check if ssl links exists
   stat: path={{vertica_catalog_dir}}/mon/v_mon_node0001_catalog/server.key

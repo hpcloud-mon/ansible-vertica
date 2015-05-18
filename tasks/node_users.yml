@@ -1,12 +1,19 @@
 ---
-# It is important that the dbadmin users on each node in a cluster can have passwordless ssh access to the other machines
-# This is done with a shared private ssh key
 
 - name: Create dbadmin group
   group: name="{{vertica_dbadmin_group}}" state=present
 
 - name: Create dbadmin user
   user: name="{{vertica_dbadmin_user}}" home="{{vertica_dbadmin_home}}" group="{{vertica_dbadmin_group}}" shell=/bin/bash
+
+- name: Create user directory under vertica for dbadmin
+  file: path=/opt/vertica/config/users/"{{vertica_dbadmin_user}}" owner="{{vertica_dbadmin_user}}" group=root mode=0775 state=directory
+
+- name: Create agent.conf
+  file: path=/opt/vertica/config/users/"{{vertica_dbadmin_user}}"/agent.conf owner=root group=root mode=0644 state=touch
+
+# It is important that the dbadmin users on each node in a cluster can have passwordless ssh access to the other machines
+# This is done with a shared private ssh key
 
 - name: Create ssh directory in vertica home directory
   file: path="{{vertica_dbadmin_home}}"/.ssh owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0700 state=directory
@@ -45,10 +52,4 @@
 
 - name: Add public key to authorized keys
   authorized_key: user="{{vertica_dbadmin_user}}" key="{{vertica_ssh_public_key}}"
-
-- name: Create user directory under vertica for dbadmin
-  file: path=/opt/vertica/config/users/"{{vertica_dbadmin_user}}" owner="{{vertica_dbadmin_user}}" group=root mode=0775 state=directory
-
-- name: Create agent.conf
-  file: path=/opt/vertica/config/users/"{{vertica_dbadmin_user}}"/agent.conf owner=root group=root mode=0644 state=touch
 

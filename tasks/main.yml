@@ -1,7 +1,6 @@
 ---
 - include: node_dependencies.yml
 
-# This assumes that the packages are not available and the packages are downloaded already
 - name: Install Vertica
   apt:  deb="{{vertica_package_location}}" state=present
   sudo: true
@@ -12,8 +11,6 @@
 - include: cluster.yml
 
 - include: create_db.yml
-
-# - meta: flush_handlers
 
 - name: Start vertica
   service: name=verticad state=started enabled=yes

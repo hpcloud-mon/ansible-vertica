@@ -4,6 +4,8 @@ Installs [Vertica](http://www.vertica.com/) either standalone or part of a clust
 Tested with Vertica 7.x
 
 ##Requirements
+- vertica_ssh_key_location - location of where to create and place ssh keys for dbadmin
+- vertica_dbadmin_password - password to be used for dbadmin on the database mon
 
 ##Optional parameters
 If the variable `vertica_cluster` is defined the nodes will be setup to be in a cluster. Valid definition of the variable is a list of the nodes and can

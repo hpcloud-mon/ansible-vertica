@@ -1,5 +1,4 @@
 ---
-# The Vertica deb doesn't do a good job at listing its dependencies so do it manually
 - name: Install Vertica dependencies
   apt: name="{{item}}" state=present
   with_items: "{{vertica_dependencies}}"
@@ -13,7 +12,7 @@
 - name: Set the LANG variable
   copy:
     dest: /etc/profile.d/vertica_node.sh
-    content: "export LANG='en_US.UTF-8'\nexport LC_ALL='en_US.UTF-8'\nexport R_HOME=/opt/vertica/R\n"
+    content: "export LANG='en_US.UTF-8'\nexport LC_ALL='en_US.UTF-8'\n"
     owner: root
     group: root
     mode: 644
