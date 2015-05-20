@@ -16,3 +16,6 @@
     owner: root
     group: root
     mode: 644
+
+- name: Create en_US.UTF-8 locale
+  shell: localedef -i en_US -c -f UTF-8 en_US.UTF-8

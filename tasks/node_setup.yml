@@ -29,6 +29,10 @@
   copy: content={{vertica_license_key}} dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
   when: vertica_license_key is defined
 
+- name: Set agent keys from the first host
+  set_fact: vertica_agent_key="{{hostvars[vertica_group[0]].vertica_agent_key}}"  vertica_agent_cert="{{hostvars[vertica_group[0]].vertica_agent_cert}}" vertica_agent_pem="{{hostvars[vertica_group[0]].vertica_agent_pem}}"
+  when: vertica_group is defined and  hostvars[vertica_group[0]].vertica_agent_key is defined
+
 - name: Check status of agent ssl file
   stat: path={{vertica_config_dir}}/share/agent.key
   register: status
@@ -40,7 +44,7 @@
     - openssl genrsa 1024 > agent.key
     - openssl req -new -x509 -nodes -sha1 -days 36500  -key agent.key -subj '/C=US/ST=Massachusetts/L=Billerica/CN=www.vertica.com' > agent.cert
     - cat agent.cert agent.key > agent.pem
-  when: not status.stat.exists and vertica_agent_key is not defined
+  when: status is defined and not status.stat.exists
 
 - name: Read in agent key
   slurp: src={{vertica_config_dir}}/share/agent.key

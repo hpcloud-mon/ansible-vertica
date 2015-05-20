@@ -10,7 +10,8 @@
 
 - include: cluster.yml
 
-- include: create_db.yml
+- name: Delete requirement ntp from init script
+  lineinfile: 'dest=/etc/init.d/verticad regexp="# Required-Start: \$network ntpd" state=absent'
 
 - name: Start vertica
   service: name=verticad state=started enabled=yes
