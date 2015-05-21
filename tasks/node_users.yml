@@ -21,6 +21,7 @@
 - name: Create config for ssh 
   copy: dest={{vertica_dbadmin_home}}/.ssh/config owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0600 content="StrictHostKeyChecking no" 
 
+# Reads in the ssh keys from the first host as it will the use the same keys throughout the cluster
 - name: Set ssh variables from first host
   set_fact: vertica_ssh_private_key="{{hostvars[vertica_group[0]].vertica_ssh_private_key}}"  vertica_ssh_public_key="{{hostvars[vertica_group[0]].vertica_ssh_public_key}}"
   when: vertica_group is defined and  hostvars[vertica_group[0]].vertica_ssh_private_key is defined
@@ -30,6 +31,7 @@
   register: status 
   when: vertica_ssh_private_key is not defined
 
+# generate ssh keys on first host if not already generated
 - name: Create ssh keys
   command: ssh-keygen -t rsa -b 2048 -f {{vertica_ssh_key_location}}/id_rsa -q -N ''
   when: status is defined and not status.stat.exists
@@ -44,6 +46,7 @@
   register: public_key_info
   when: vertica_ssh_public_key is not defined
 
+# sets the ssh keys on the first host
 - name: Set public and private key variables
   set_fact: vertica_ssh_private_key="{{private_key_info.content | b64decode}}" vertica_ssh_public_key="{{public_key_info.content | b64decode}}"
   when: vertica_ssh_private_key is not defined
