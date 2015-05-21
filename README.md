@@ -8,8 +8,12 @@ Tested with Vertica 7.x
 - vertica_dbadmin_password - password to be used for dbadmin on the database mon
 
 ##Optional parameters
-If the variable `vertica_cluster` is defined the nodes will be setup to be in a cluster. Valid definition of the variable is a list of the nodes and can
-easily be set if using a group for your Vertica cluster, see the example playbook below.
+If the variables `vertica_cluster` and `vertica_group` are both defined the nodes will be setup to be in a cluster. 
+
+vertica_cluster is a common separated list of the group of nodes that you want to be apart of your cluster and vertica_group
+is set to that group from the ansible inventory file.
+
+See the example playbook below.
 
 If defined with a valid license the contents of `vertica_license_key` will be used for the license key.
 
@@ -17,12 +21,17 @@ If defined with a valid license the contents of `vertica_license_key` will be us
 Vertica recommends setting the kernel disk scheduling algorithm to deadline. This can be done by adding the kernel bootparam "elevator=deadline" then
 restarting. This optimization is not done by the role.
 
+This role does not create the database. That creation is in the role [Monasca-schema](https://github.com/hpcloud-mon/ansible-monasca-schema)
+
 ##Example Playbook
 
     hosts: vertica
     sudo: yes
     roles:
-      - {role: vertica, vertica_cluster="{{groups['vertica']}}", tags: [vertica]}
+      - {role: vertica, 
+         vertica_group="{{groups['vertica']}}", 
+         vertica_cluster="10.10.10.1,10.10.10.2,10.10.10.3",
+         tags: [vertica]}
 
 ##License
 Apache
@@ -30,3 +39,4 @@ Apache
 ##Author Information
 Michael Hoppal and Tim Kuhlman
 Monasca Team email monasca@lists.launchpad.net
+
