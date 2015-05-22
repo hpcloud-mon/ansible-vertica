@@ -14,6 +14,6 @@
   lineinfile: 'dest=/etc/init.d/verticad regexp="# Required-Start: \$network ntpd" state=absent'
 
 - name: Start vertica
-  service: name=verticad state=started enabled=yes
+  service: name=verticad enabled=yes
 - name: Start vertica_agent
-  service: name=vertica_agent state=started enabled=yes
+  service: name=vertica_agent enabled=yes

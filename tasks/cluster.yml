@@ -11,8 +11,12 @@
   template: src=admintools.conf.j2 dest={{vertica_config_dir}}/admintools.conf owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=660
   when: not admin_tools_status.stat.exists
 
-- name: "Build hosts file"
+- name: Build hosts file if inventory entry is defined with hostname
   lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_default_ipv4.address }} {{item}}" state=present
-  when: vertica_cluster is defined and vertica_group is defined
+  when: vertica_cluster is defined and vertica_group is defined and hostvars[item].ansible_default_ipv4.address is defined
   with_items: vertica_group
 
+- name: Build hosts file if inventory entry is defined with ip
+  lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{item}} {{ hostvars[item].ansible_fqdn }}" state=present
+  when: vertica_cluster is defined and vertica_group is defined and hostvars[item].ansible_default_ipv4.address is not defined
+  with_items: vertica_group
