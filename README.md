@@ -15,7 +15,7 @@ is set to that group from the ansible inventory file.
 
 See the example playbook below.
 
-If defined with a valid license the contents of `vertica_license_key` will be used for the license key.
+If `vertica_license_location` is defined that location will be used to copy over that production license key.
 
 ## Other notes
 Vertica recommends setting the kernel disk scheduling algorithm to deadline. This can be done by adding the kernel bootparam "elevator=deadline" then
