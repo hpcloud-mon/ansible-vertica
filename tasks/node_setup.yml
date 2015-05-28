@@ -68,7 +68,7 @@
   set_fact: vertica_agent_key="{{agent_key_info.content | b64decode}}" vertica_agent_cert="{{agent_cert_info.content | b64decode}}" vertica_agent_pem="{{agent_pem_info.content | b64decode}}"
   when: vertica_agent_key is not defined
 
-- name: Create agent key 
+- name: Create agent key
   copy: dest={{vertica_config_dir}}/share/agent.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_agent_key}}"
 
 - name: Create agent cert
