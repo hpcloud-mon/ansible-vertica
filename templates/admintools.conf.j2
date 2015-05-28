@@ -9,7 +9,7 @@ controlmode = pt2pt
 
 [Cluster]
 hosts = {{vertica_ips}}
-spread_hosts = 
+spread_hosts =
 
 [Nodes]
 {% for url in vertica_ips.split(',') %}
