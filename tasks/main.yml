@@ -2,7 +2,7 @@
 - include: node_dependencies.yml
 
 - name: Install Vertica
-  apt:  deb="{{vertica_package_location}}" state=present
+  apt:  deb="{{vertica_package_location}}" state=installed
   sudo: true
 
 - include: node_users.yml
