@@ -1,0 +1,10 @@
+- name: Set file owner to dbadmin so we can rerun logrotate
+  file: path=/opt/vertica/config/logrotate/mon owner={{vertica_dbadmin_user}} group={{vertica_dbadmin_group}}
+
+- name: Set the logrotate of the Vertica logs
+  command: /opt/vertica/bin/admintools -t logrotate -d mon -r {{ vertica_logrotate_period }} -k {{ vertica_logrotate_retention }} -s {{ vertica_logrotate_min_size }}
+  sudo_user: dbadmin
+  environment: "{{vertica_env}}"
+
+- name: Set file owner to root for the mon logrotate config
+  file: path=/opt/vertica/config/logrotate/mon owner=root group=root

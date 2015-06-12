@@ -10,3 +10,7 @@ vertica_dependencies:
   - ssh
   - sysstat
   - mcelog
+# daily|weekly|monthly
+vertica_logrotate_period: weekly
+vertica_logrotate_retention: 4
+vertica_logrotate_min_size: 500

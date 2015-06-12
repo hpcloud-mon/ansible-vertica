@@ -1,19 +1,18 @@
 ---
-- include: node_dependencies.yml
+- include: install.yml
+  when: run_mode == 'Install' or run_mode == 'Deploy'
 
-- name: Install Vertica
-  apt:  deb="{{vertica_package_location}}" state=installed
-  sudo: true
+- include: configure.yml
+  when: run_mode == 'Configure' or run_mode == 'Deploy'
 
-- include: node_users.yml
-- include: node_setup.yml
+- include: enable.yml
+  when: run_mode == 'Deploy'
 
-- include: cluster.yml
+- include: start.yml
+  when: run_mode == 'Start'
 
-- name: Delete requirement ntp from init script
-  lineinfile: 'dest=/etc/init.d/verticad regexp="# Required-Start: \$network ntpd" state=absent'
+- include: stop.yml
+  when: run_mode == 'Stop'
 
-- name: Start vertica
-  service: name=verticad enabled=yes
-- name: Start vertica_agent
-  service: name=vertica_agent enabled=yes
+- include: configure_logrotate.yml
+  when: run_mode == 'Logging'
