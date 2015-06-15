@@ -1,7 +1,7 @@
 ---
 - name: Install Vertica dependencies
   apt: name="{{item}}" state=present
-  with_items: "{{vertica_dependencies}}"
+  with_items: vertica_dependencies
   when: not skip_install
 
 - name: Setup User limits for the db
