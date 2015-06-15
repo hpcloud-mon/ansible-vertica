@@ -10,6 +10,7 @@ Tested with Vertica 7.x
 ##Optional parameters
 
 - run_mode: One of Deploy, Stop, Install, Start, or Logging. The default is Deploy which will do Install, Configure, then Enable. 'Start' and 'Logging' can only be run after the database is created via [Monasca-schema](https://github.com/hpcloud-mon/ansible-monasca-schema)
+- vertica_database_name: Database name for the vertica database. Must be the same as in set in [Monasca-schema](https://github.com/hpcloud-mon/ansible-monasca-schema). Defaults to mon.
 
 If the variables `vertica_cluster` and `vertica_group` are both defined the nodes will be setup to be in a cluster.
 
