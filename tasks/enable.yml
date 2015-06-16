@@ -1,5 +1,5 @@
 ---
-- name: Start vertica
+- name: Enable vertica
   service: name=verticad enabled=yes
-- name: Start vertica_agent
+- name: Enable vertica_agent
   service: name=vertica_agent enabled=yes

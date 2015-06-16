@@ -6,7 +6,7 @@
   when: run_mode == 'Configure' or run_mode == 'Deploy'
 
 - include: enable.yml
-  when: run_mode == 'Deploy'
+  when: run_mode == 'Configure' or run_mode == 'Deploy'
 
 - include: start.yml
   when: run_mode == 'Start'
