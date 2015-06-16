@@ -1,0 +1,21 @@
+{% set formatted_vertica_node_name = vertica_node_name|replace("['","")|replace("']","") %}
+/var/vertica/catalog/{{ vertica_database_name }}/{{ formatted_vertica_node_name }}_catalog/vertica.log /var/vertica/catalog/{{ vertica_database_name }}/{{ formatted_vertica_node_name }}_catalog/UDxLogs/UDxFencedProcesses.log{
+    compress
+    size {{ vertica_logrotate_min_size }}M
+    sharedscripts
+    {{ vertica_logrotate_period }}
+    rotate {{ vertica_logrotate_retention }}
+    nocreate
+    missingok
+    postrotate
+        kill -USR1 `head -1 /var/vertica/catalog/{{ vertica_database_name }}/{{ formatted_vertica_node_name }}_catalog/vertica.pid 2> /dev/null` 2> /dev/null || true
+    endscript
+}
+/var/vertica/catalog/{{ vertica_database_name }}/dbLog{
+    compress
+    size {{ vertica_logrotate_min_size }}M
+    {{ vertica_logrotate_period }}
+    rotate {{ vertica_logrotate_retention }}
+    copytruncate
+    missingok
+}

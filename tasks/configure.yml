@@ -1,0 +1,8 @@
+---
+- include: node_users.yml
+- include: node_setup.yml
+
+- include: cluster.yml
+
+- name: Delete requirement ntp from init script
+  lineinfile: 'dest=/etc/init.d/verticad regexp="# Required-Start: \$network ntpd" state=absent'

@@ -1,0 +1,5 @@
+---
+- name: Start vertica
+  service: name=verticad state=started
+- name: Start vertica_agent
+  service: name=vertica_agent state=started

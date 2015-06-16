@@ -3,3 +3,6 @@ vertica_catalog_dir: /var/vertica/catalog
 vertica_data_dir: /var/vertica/data
 vertica_ips: 127.0.0.1
 skip_install: false
+run_mode: Deploy
+vertica_env: {LC_ALL: en_US.UTF-8, LANG: en_US.UTF-8}
+vertica_database_name: mon

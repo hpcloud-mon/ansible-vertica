@@ -1,0 +1,5 @@
+---
+- name: Stop vertica
+  service: name=verticad state=stopped
+- name: Stop vertica_agent
+  service: name=vertica_agent state=stopped
