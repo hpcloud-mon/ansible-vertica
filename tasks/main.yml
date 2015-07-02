@@ -3,7 +3,7 @@
   when: run_mode == 'Install' or run_mode == 'Deploy'
 
 - include: configure.yml
-  when: run_mode == 'Configure' or run_mode == 'Deploy'
+  when: run_mode == 'Configure' or run_mode == 'Deploy'    
 
 - include: enable.yml
   when: run_mode == 'Configure' or run_mode == 'Deploy'
