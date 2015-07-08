@@ -11,6 +11,7 @@ Tested with Vertica 7.x
 
 - run_mode: One of Deploy, Stop, Install, Start, or Logging. The default is Deploy which will do Install, Configure, then Enable. 'Start' and 'Logging' can only be run after the database is created via [Monasca-schema](https://github.com/hpcloud-mon/ansible-monasca-schema)
 - vertica_database_name: Database name for the vertica database. Must be the same as in set in [Monasca-schema](https://github.com/hpcloud-mon/ansible-monasca-schema). Defaults to mon.
+- vertica_license - Production license key to use when creating the database. By default the role will use the community license.
 
 If the variables `vertica_cluster` and `vertica_group` are both defined the nodes will be setup to be in a cluster.
 
@@ -18,8 +19,6 @@ vertica_cluster is a common separated list of the group of nodes that you want t
 is set to that group from the ansible inventory file.
 
 See the example playbook below.
-
-If `vertica_license_location` is defined that location will be used to copy over that production license key.
 
 ## Other notes
 Vertica recommends setting the kernel disk scheduling algorithm to deadline. This can be done by adding the kernel bootparam "elevator=deadline" then
