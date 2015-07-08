@@ -21,14 +21,6 @@
 - name: Create file for EULA acceptance
   copy: src=d5415f948449e9d4c421b568f2411140.dat dest={{vertica_config_dir}}/d5415f948449e9d4c421b568f2411140.dat owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=775
 
-- name: Place community license key
-  copy: src=community_license.key dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
-  when: vertica_license_location is not defined
-
-- name: Place license key
-  copy: src={{vertica_license_location}} dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
-  when: vertica_license_location is defined
-
 # reads in the agent ssh keys from the first host as it will the use the same keys throughout the cluster
 - name: Set agent keys from the first host
   set_fact: vertica_agent_key="{{hostvars[vertica_group[0]].vertica_agent_key}}"  vertica_agent_cert="{{hostvars[vertica_group[0]].vertica_agent_cert}}" vertica_agent_pem="{{hostvars[vertica_group[0]].vertica_agent_pem}}"
