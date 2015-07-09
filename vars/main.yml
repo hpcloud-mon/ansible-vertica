@@ -10,6 +10,8 @@ vertica_dependencies:
   - ssh
   - sysstat
   - mcelog
+  - python-dev
+  - unixodbc-dev
 # daily|weekly|monthly
 vertica_logrotate_period: weekly
 vertica_logrotate_retention: 4
