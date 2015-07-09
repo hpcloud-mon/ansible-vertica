@@ -1,7 +1,11 @@
 ---
-- name: Install Vertica dependencies
+- name: Install Vertica APT dependencies
   apt: name="{{item}}" state=present
   with_items: vertica_dependencies
+  when: not skip_install
+
+- name: Install Vertica PIP dependencies
+  pip: name=pyodbc state=present virtualenv="{{monasca_virtualenv_dir}}"
   when: not skip_install
 
 - name: Setup User limits for the db
@@ -20,3 +24,6 @@
 
 - name: Create en_US.UTF-8 locale
   shell: localedef -i en_US -c -f UTF-8 en_US.UTF-8
+
+- name: Configure ODBC
+  template: src=odbcinst.j2 dest=/etc/odbcinst.ini owner=root group=root mode=644

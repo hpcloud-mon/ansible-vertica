@@ -4,3 +4,6 @@
 - name: Install Vertica
   apt:  deb="{{vertica_package_location}}" state=installed
   sudo: true
+
+- name: Create Vertica dot file for the agent plugin
+  template: src=root-vertica-cnf.j2 dest=/root/.vertica.cnf owner=root group=root mode=400
