@@ -1,6 +1,12 @@
 ---
 - include: node_dependencies.yml
 
-- name: Install Vertica
+- name: Install Vertica from apt repo
+  apt: name="vertica{% if vertica_version is defined %}={{ vertica_version }}{% endif %}"
+  sudo: true
+  when: vertica_use_apt
+
+- name: Install Vertica from local
   apt:  deb="{{vertica_package_location}}" state=installed
   sudo: true
+  when: not vertica_use_apt

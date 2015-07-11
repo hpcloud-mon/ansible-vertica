@@ -1,6 +1,6 @@
 [Configuration]
 default_base = /home/dbadmin
-install_opts = -Y -T -s {{vertica_ips}} -r {{vertica_package_location}} -d /var/vertica/data
+install_opts = -Y -T -s {{vertica_ips}} {% if vertica_package_location is defined %}-r {{vertica_package_location}} {% endif %}-d /var/vertica/data
 show_hostnames = False
 format = 3
 last_port = 5433
