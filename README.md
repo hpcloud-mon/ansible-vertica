@@ -12,6 +12,8 @@ Tested with Vertica 7.x
 - run_mode: One of Deploy, Stop, Install, Start, or Logging. The default is Deploy which will do Install, Configure, then Enable. 'Start' and 'Logging' can only be run after the database is created via [Monasca-schema](https://github.com/hpcloud-mon/ansible-monasca-schema)
 - vertica_database_name: Database name for the vertica database. Must be the same as in set in [Monasca-schema](https://github.com/hpcloud-mon/ansible-monasca-schema). Defaults to mon.
 - vertica_license - Production license key to use when creating the database. By default the role will use the community license.
+- vertica_use_apt: If True, vertica will be install from the apt repository. If False, it will be installed from the given local package. Default is False
+- vertica_version: If set and vertica_use_apt is True, then the given version will be installed
 
 If the variables `vertica_cluster` and `vertica_group` are both defined the nodes will be setup to be in a cluster.
 
