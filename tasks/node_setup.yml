@@ -21,13 +21,19 @@
 - name: Create file for EULA acceptance
   copy: src=d5415f948449e9d4c421b568f2411140.dat dest={{vertica_config_dir}}/d5415f948449e9d4c421b568f2411140.dat owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=775
 
+- name: Check if database exists
+  command: /opt/vertica/bin/admintools -t list_db -d {{ vertica_database_name }}
+  sudo_user: dbadmin
+  ignore_errors: yes
+  register: place_key
+
 - name: Place community license key
   copy: src=community_license.key dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
-  when: vertica_license is not defined
+  when: vertica_license is not defined and place_key|failed
 
 - name: Place license key
   copy: content="{{vertica_license}}" dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
-  when: vertica_license is defined
+  when: vertica_license is defined and place_key|failed
 
 # reads in the agent ssh keys from the first host as it will the use the same keys throughout the cluster
 - name: Set agent keys from the first host
