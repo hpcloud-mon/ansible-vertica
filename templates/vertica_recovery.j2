@@ -11,7 +11,7 @@ fi
 
 echo "Attempting to start database from current state"
 
-su dbadmin -c '/opt/vertica/bin/admintools -t start_db -d {{ vertica_database_name }} -p {{ vertica_admin_password }}'
+su dbadmin -c '/opt/vertica/bin/admintools -t start_db -d {{ vertica_database_name }} -p "{{ vertica_admin_password }}" -i'
 
 vertica_status=$(su dbadmin -c '/opt/vertica/bin/admintools -t view_cluster -d {{ vertica_database_name }}' | grep DOWN | wc -l)
 
@@ -23,7 +23,7 @@ fi
 
 echo "Attempting to restart database from last good known state"
 
-su dbadmin -c '/opt/vertica/bin/admintools -t restart_db -d {{ vertica_database_name }} -e last -p {{ vertica_admin_password }}'
+su dbadmin -c '/opt/vertica/bin/admintools -t restart_db -d {{ vertica_database_name }} -e last -p "{{ vertica_admin_password }}" -i'
 
 vertica_status=$(su dbadmin -c '/opt/vertica/bin/admintools -t view_cluster -d {{ vertica_database_name }}' | grep DOWN | wc -l)
 
@@ -35,7 +35,7 @@ fi
 
 echo "Attempting to restart database from last good known state on each node"
 
-su dbadmin -c '/opt/vertica/bin/admintools -t restart_node -s {{ vertica_ips }} -d {{ vertica_database_name }} -p {{ vertica_admin_password }} -F'
+su dbadmin -c '/opt/vertica/bin/admintools -t restart_node -s {{ vertica_ips }} -d {{ vertica_database_name }} -p "{{ vertica_admin_password }}" -F -i'
 
 vertica_status=$(su dbadmin -c '/opt/vertica/bin/admintools -t view_cluster -d {{ vertica_database_name }}' | grep DOWN | wc -l)
 
