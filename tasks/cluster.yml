@@ -21,5 +21,8 @@
   when: vertica_cluster is defined and vertica_group is defined and hostvars[item].ansible_default_ipv4.address is not defined
   with_items: vertica_group
 
+- name: Create the vertica_script_location
+  file: path={{vertica_script_location}} state=directory owner=root group=root mode=755
+
 - name: Create recovery script
   template: src=vertica_recovery.j2 dest={{vertica_script_location}}/vertica_recovery mode=740
