@@ -1,2 +1,2 @@
 - name: Recover Database
-  shell: /opt/monasca/vertica_recovery
+  shell: "{{vertica_script_location}}/vertica_recovery"
