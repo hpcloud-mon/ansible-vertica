@@ -1,5 +1,12 @@
 ---
-- name: Start vertica
-  service: name=verticad state=started
+- name: Start vertica DB cluster (admintools start_db)
+  command: su dbadmin -c '/opt/vertica/bin/admintools -t start_db -d {{vertica_database_name}} -p "{{vertica_dbadmin_password}}"'
+  register: status_start
+  failed_when: status_start | failed
+  run_once: true
+
+- name: wait for vertica port
+  wait_for: port={{vertica_client_port}} host='127.0.0.1' state=started timeout={{monasca_wait_for_period}}
+
 - name: Start vertica_agent
   service: name=vertica_agent state=started
