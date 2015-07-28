@@ -7,3 +7,6 @@ run_mode: Deploy
 vertica_env: {LC_ALL: en_US.UTF-8, LANG: en_US.UTF-8}
 vertica_database_name: mon
 vertica_use_apt: False
+vertica_client_port: 5433
+monasca_wait_for_period: 90
+vertica_script_location: /opt/monasca
