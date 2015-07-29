@@ -1,2 +1,0 @@
-- name: Recover Database
-  shell: "{{vertica_script_location}}/vertica_recovery"
