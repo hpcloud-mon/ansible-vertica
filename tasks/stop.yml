@@ -1,9 +1,16 @@
 ---
-- name: Stop vertica DB cluster (admintools stop_db)
+- name: vertica | stop | check service status
+  command: su dbadmin -c '/opt/vertica/bin/admintools -t view_cluster -d {{vertica_database_name}}'
+  register: running_result
+  run_once: true
+  ignore_errors: yes
+
+- name: vertica | stop | stop vertica service (when up)
   command: su dbadmin -c '/opt/vertica/bin/admintools -t stop_db -d {{ vertica_database_name }} -p "{{vertica_dbadmin_password}}"'
   register: status_stop
   failed_when: status_stop | failed
   run_once: true
+  when: running_result.stdout.find("UP") != -1
 
-- name: Stop vertica_agent
+- name: vertica_agent | stop | stop vertica_agent
   service: name=vertica_agent state=stopped
