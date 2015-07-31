@@ -9,7 +9,7 @@
   when: run_mode == 'Configure' or run_mode == 'Deploy'
 
 - include: start.yml
-  when: run_mode == 'Start'
+  when: run_mode == 'Start' or monasca_vertica_restart_required
 
 - include: stop.yml
   when: run_mode == 'Stop'

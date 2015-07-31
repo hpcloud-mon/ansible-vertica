@@ -5,6 +5,13 @@
   run_once: true
   ignore_errors: yes
 
+- name: vertica | restart | restart vertica service
+  command: su dbadmin -c '/opt/vertica/bin/admintools -t start_db -d {{vertica_database_name}} -p "{{vertica_dbadmin_password}}"'
+  register: status_start
+  failed_when: status_start | failed
+  run_once: true
+  when:  monasca_vertica_restart_required
+
 - name: vertica | start | start vertica service (when down)
   command: su dbadmin -c '/opt/vertica/bin/admintools -t start_db -d {{vertica_database_name}} -p "{{vertica_dbadmin_password}}"'
   register: status_start
@@ -14,6 +21,10 @@
 
 - name: vertica | start | wait for vertica port
   wait_for: port={{vertica_client_port}} host='127.0.0.1' state=started timeout={{monasca_wait_for_period}}
+
+- name: vertica_agent | restart | restart vertica agent service
+  service: name=vertica_agent state=restarted
+  when: monasca_vertica_restart_required
 
 - name: vertica agent | start | start vertica agent service
   service: name=vertica_agent state=started
