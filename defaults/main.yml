@@ -10,3 +10,6 @@ vertica_use_apt: False
 vertica_client_port: 5433
 monasca_wait_for_period: 90
 vertica_script_location: /opt/monasca
+
+# flag to track restart requirement during reconfigure
+monasca_vertica_restart_required: false
