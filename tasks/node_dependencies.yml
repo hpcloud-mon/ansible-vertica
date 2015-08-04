@@ -1,8 +1,13 @@
 ---
-- name: Install Vertica dependencies
+- name: Install Vertica dependencies (apt)
   apt: name="{{item}}" state=present
   with_items: vertica_dependencies
-  when: not skip_install
+  when: not skip_install and ansible_os_family == 'Debian'
+
+- name: Install Vertica dependencies (yum)
+  yum: name="{{item}}" state=present
+  with_items: vertica_dependencies
+  when: not skip_install and ansible_os_family == 'RedHat'
 
 - name: Setup User limits for the db
   template: dest=/etc/security/limits.d/vertica.conf owner=root group=root mode=644 src=vertica_limits.conf.j2

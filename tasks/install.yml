@@ -6,7 +6,12 @@
   sudo: true
   when: vertica_use_apt
 
-- name: Install Vertica from local
+- name: Install Vertica from local (deb)
   apt:  deb="{{vertica_package_location}}" state=installed
   sudo: true
-  when: not vertica_use_apt
+  when: not vertica_use_apt and ansible_os_family == 'Debian'
+
+- name: Install Vertica from local (yum)
+  yum:  name="{{vertica_package_location}}" state=present
+  sudo: true
+  when: not vertica_use_apt and ansible_os_family == 'RedHat'

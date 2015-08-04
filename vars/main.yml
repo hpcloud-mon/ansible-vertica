@@ -7,7 +7,7 @@ vertica_dependencies:
   - logrotate
   - pstack
   - rsync
-  - ssh
+  - "{{ 'openssh' if ansible_os_family == 'RedHat' else 'ssh' }}"
   - sysstat
   - mcelog
 # daily|weekly|monthly
