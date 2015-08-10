@@ -11,9 +11,13 @@
 
 - name: Setup User limits for the db
   template: dest=/etc/security/limits.d/vertica.conf owner=root group=root mode=644 src=vertica_limits.conf.j2
+  notify:
+    - monasca_vertica_config_change
 
 - name: Apply security limits to su sessions, admintools needs this as it uses su
   lineinfile: dest=/etc/pam.d/su regexp="^#\ssession    required   pam_limits.so" line="session    required   pam_limits.so" backrefs=yes
+  notify:
+    - monasca_vertica_config_change
 
 - name: Set the LANG variable
   copy:
@@ -22,6 +26,8 @@
     owner: root
     group: root
     mode: 644
+  notify:
+    - monasca_vertica_config_change
 
 - name: Create en_US.UTF-8 locale
   shell: localedef -i en_US -c -f UTF-8 en_US.UTF-8

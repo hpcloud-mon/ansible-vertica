@@ -1,0 +1,4 @@
+---
+- name: monasca_vertica_config_change
+  set_fact:
+    monasca_vertica_restart_required: true

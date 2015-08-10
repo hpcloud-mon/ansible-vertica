@@ -4,9 +4,15 @@
   sudo_user: dbadmin
   environment: "{{vertica_env}}"
   register: vertica_node
+  notify:
+    - monasca_vertica_config_change
 
 - name: Set vertica_node name
   set_fact: vertica_node_name={{vertica_node.stdout}}
+  notify:
+    - monasca_vertica_config_change
 
 - name: Place logrotate conf for vertica
   template: src=vertica_logrotate.j2 dest=/opt/vertica/config/logrotate/{{ vertica_database_name }} owner=root group=root mode=644
+  notify:
+    - monasca_vertica_config_change
