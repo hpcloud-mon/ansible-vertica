@@ -1,4 +1,6 @@
 ---
+# ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+
 - name: Create catalog and data directory
   file: path={{item}} owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=770 state=directory
   with_items:

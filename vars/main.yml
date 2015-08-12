@@ -1,4 +1,6 @@
 ---
+# ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+
 vertica_config_dir: /opt/vertica/config
 vertica_dbadmin_user: dbadmin
 vertica_dbadmin_group: verticadba

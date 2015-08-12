@@ -1,4 +1,6 @@
 ---
+# ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+
 - include: install.yml
   when: run_mode == 'Install' or run_mode == 'Deploy'
 
