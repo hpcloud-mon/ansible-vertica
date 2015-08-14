@@ -1,4 +1,6 @@
 ---
+# ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+
 - name: Get Vertica node name
   command: /opt/vertica/bin/vsql -U dbadmin -w '{{ vertica_dbadmin_password }}' -t -A -c "select NODE_NAME from CURRENT_SESSION;"
   sudo_user: dbadmin

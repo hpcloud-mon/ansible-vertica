@@ -1,4 +1,6 @@
 ---
+# ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+
 vertica_catalog_dir: /var/vertica/catalog
 vertica_data_dir: /var/vertica/data
 vertica_ips: 127.0.0.1

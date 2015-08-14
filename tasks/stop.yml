@@ -1,4 +1,6 @@
 ---
+# ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+
 - name: vertica | stop | check service status
   command: su dbadmin -c '/opt/vertica/bin/admintools -t view_cluster -d {{vertica_database_name}}'
   register: running_result
