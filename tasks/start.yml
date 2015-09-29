@@ -5,6 +5,7 @@
   command: su dbadmin -c '/opt/vertica/bin/admintools -t view_cluster -d {{vertica_database_name}}'
   register: running_result
   run_once: true
+  changed_when: false
   failed_when: false
 
 - name: vertica | start | start vertica service (when down)

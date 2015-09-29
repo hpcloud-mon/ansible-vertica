@@ -26,6 +26,7 @@
 - name: Check if database exists
   command: /opt/vertica/bin/admintools -t list_db -d {{ vertica_database_name }}
   sudo_user: dbadmin
+  changed_when: false
   failed_when: false
   register: place_key
 
