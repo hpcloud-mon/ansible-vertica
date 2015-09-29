@@ -1,4 +1,6 @@
 ---
+# ©Copyright 2015 Hewlett-Packard Development Company, L.P.
+
 - name: Set Vertica IPs for cluster deployment
   set_fact: vertica_ips={{vertica_cluster}}
   when: vertica_cluster is defined
