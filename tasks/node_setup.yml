@@ -87,7 +87,7 @@
   copy: dest={{vertica_config_dir}}/share/agent.pem owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_agent_pem}}"
 
 - name: Using insecure default database ssl key
-  copy: src=default_server.key dest=/var/vertica/server.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 force=no
+  copy: src=default_server.key dest={{vertica_catalog_dir}}/../server.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 force=no
   when: vertica_server_key is not defined
 
 - name: Using insecure default database ssl crt
