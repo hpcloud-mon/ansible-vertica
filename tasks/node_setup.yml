@@ -23,19 +23,24 @@
 - name: Create file for EULA acceptance
   copy: src=d5415f948449e9d4c421b568f2411140.dat dest={{vertica_config_dir}}/d5415f948449e9d4c421b568f2411140.dat owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=775
 
+# Required for Vertica 7.2 since it writes a logrotate file when creating the database as the dbadmin user.
+- name: Set logrotate folder permissions
+  file: path=/opt/vertica/config/logrotate/ state=directory owner={{vertica_dbadmin_user}} group={{vertica_dbadmin_group}}
+
 - name: Check if database exists
   command: /opt/vertica/bin/admintools -t list_db -d {{ vertica_database_name }}
   sudo_user: dbadmin
-  ignore_errors: yes
+  changed_when: false
+  failed_when: false
   register: place_key
 
 - name: Place community license key
   copy: src=community_license.key dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
-  when: vertica_license is not defined and place_key|failed
+  when: vertica_license is not defined and place_key.rc != 0
 
 - name: Place license key
   copy: content="{{vertica_license}}" dest={{vertica_config_dir}}/share/license.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=664
-  when: vertica_license is defined and place_key|failed
+  when: vertica_license is defined and place_key.rc != 0
 
 # reads in the agent ssh keys from the first host as it will the use the same keys throughout the cluster
 - name: Set agent keys from the first host
@@ -86,7 +91,7 @@
   copy: dest={{vertica_config_dir}}/share/agent.pem owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 content="{{vertica_agent_pem}}"
 
 - name: Using insecure default database ssl key
-  copy: src=default_server.key dest=/var/vertica/server.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 force=no
+  copy: src=default_server.key dest={{vertica_catalog_dir}}/../server.key owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=400 force=no
   when: vertica_server_key is not defined
 
 - name: Using insecure default database ssl crt
