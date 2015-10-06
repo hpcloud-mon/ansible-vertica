@@ -25,6 +25,3 @@
 
 - name: Create the vertica_script_location
   file: path={{vertica_script_location}} state=directory owner=root group=root mode=755
-
-- name: Create recovery script
-  template: src=vertica_recovery.j2 dest={{vertica_script_location}}/vertica_recovery mode=740

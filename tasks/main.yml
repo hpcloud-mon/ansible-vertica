@@ -18,6 +18,3 @@
 
 - include: configure_logrotate.yml
   when: run_mode == 'Logging'
-
-- include: recover.yml
-  when: run_mode == 'Recover'
