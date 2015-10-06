@@ -23,6 +23,10 @@
 - name: Create file for EULA acceptance
   copy: src=d5415f948449e9d4c421b568f2411140.dat dest={{vertica_config_dir}}/d5415f948449e9d4c421b568f2411140.dat owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=775
 
+# Required for Vertica 7.2 since it writes a logrotate file when creating the database as the dbadmin user.
+- name: Set logrotate folder permissions
+  file: path=/opt/vertica/config/logrotate/ state=directory owner={{vertica_dbadmin_user}} group={{vertica_dbadmin_group}}
+
 - name: Check if database exists
   command: /opt/vertica/bin/admintools -t list_db -d {{ vertica_database_name }}
   sudo_user: dbadmin
