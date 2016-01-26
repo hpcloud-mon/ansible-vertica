@@ -11,4 +11,4 @@
   set_fact: vertica_node_name={{vertica_node.stdout}}
 
 - name: Place logrotate conf for vertica
-  template: src=vertica_logrotate.j2 dest=/opt/vertica/config/logrotate/{{ vertica_database_name }} owner=root group=root mode=644
+  template: src=vertica_logrotate.j2 dest=/opt/vertica/config/logrotate/{{ vertica_database_name }} owner=root group=root mode=0644
