@@ -28,7 +28,7 @@
   file: path=/opt/vertica/config/logrotate/ state=directory owner={{vertica_dbadmin_user}} group={{vertica_dbadmin_group}}
 
 - name: Check if database exists
-  command: /opt/vertica/bin/admintools -t list_db -d {{ vertica_database_name }}
+  shell: yes ACCEPT | /opt/vertica/bin/admintools -t list_db -d {{ vertica_database_name }}
   sudo_user: dbadmin
   changed_when: false
   failed_when: false
