@@ -10,7 +10,7 @@
   register: admin_tools_status
 
 - name: Create admintools config file
-  template: src=admintools.conf.j2 dest={{vertica_config_dir}}/admintools.conf owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=660
+  template: src=admintools.conf.j2 dest={{vertica_config_dir}}/admintools.conf owner="{{vertica_dbadmin_user}}" group="{{vertica_dbadmin_group}}" mode=0660
   when: not admin_tools_status.stat.exists
 
 - name: Build hosts file if inventory entry is defined with hostname
@@ -24,7 +24,7 @@
   with_items: vertica_group
 
 - name: Create the vertica_script_location
-  file: path={{vertica_script_location}} state=directory owner=root group=root mode=755
+  file: path={{vertica_script_location}} state=directory owner=root group=root mode=0755
 
 - name: Create recovery script
-  template: src=vertica_recovery.j2 dest={{vertica_script_location}}/vertica_recovery mode=740
+  template: src=vertica_recovery.j2 dest={{vertica_script_location}}/vertica_recovery mode=0740
